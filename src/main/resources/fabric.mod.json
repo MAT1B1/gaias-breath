@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "gaias-breath",
+	"version": "${version}",
+	"name": "Gaia’s Breath",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Matibi"
+	],
+	"contact": {
+		"homepage": "",
+		"sources": ""
+	},
+	"license": "MIT",
+	"icon": "assets/gaias-breath/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.matibi.gaiasbreath.GaiasBreath"
+		],
+		"fabric-datagen": [
+			"com.matibi.gaiasbreath.GaiasBreathDataGenerator"
+		],
+        "client": [
+          "com.matibi.gaiasbreath.GaiasBreathClient"
+        ]
+	},
+	"mixins": [
+		"gaias-breath.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.17.3",
+		"minecraft": "<=1.21.10 >=1.21.9",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

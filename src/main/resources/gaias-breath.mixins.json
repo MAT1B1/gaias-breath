@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.matibi.gaiasbreath.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "CropBlockMixin",
+    "FireBlockMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  },
+  "overwrites": {
+    "requireAnnotations": true
+	}
+}
