@@ -1,10 +1,12 @@
 package com.matibi.gaiasbreath.mixin;
 
 import com.matibi.gaiasbreath.GaiasBreath;
+import com.matibi.gaiasbreath.util.ChunkTracker;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,7 +26,13 @@ public class CropBlockMixin {
         int maxAge = crop.getMaxAge();
         var cfg = GaiasBreath.CONFIG;
 
-        if (currentAge < maxAge && random.nextFloat() < cfg.RAIN_GROWTH_CHANCE)
-            world.setBlockState(pos, crop.withAge(currentAge + 1), 2);
+        if (currentAge < maxAge && random.nextFloat() < cfg.RAIN_GROWTH_CHANCE) {
+            world.getServer().execute(() -> {
+                if (ChunkTracker.getLoadedChunks().contains(new ChunkPos(pos))) {
+                    world.setBlockState(pos, crop.withAge(currentAge + 1), 2);
+                }
+            });
+        }
     }
+
 }

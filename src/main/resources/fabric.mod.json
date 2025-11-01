@@ -1,43 +1,43 @@
 {
-	"schemaVersion": 1,
-	"id": "gaias-breath",
-	"version": "${version}",
-	"name": "Gaia’s Breath",
-	"description": "This is an example description! Tell everyone what your mod is about!",
-	"authors": [
-		"Matibi"
-	],
-	"contact": {
-		"homepage": "",
-		"sources": ""
-	},
-	"license": "MIT",
-	"icon": "assets/gaias-breath/icon.png",
-	"environment": "*",
-	"entrypoints": {
-		"main": [
-			"com.matibi.gaiasbreath.GaiasBreath"
-		],
-		"fabric-datagen": [
-			"com.matibi.gaiasbreath.GaiasBreathDataGenerator"
-		],
-        "client": [
-          "com.matibi.gaiasbreath.GaiasBreathClient"
-        ],
-        "modmenu": [
-          "com.matibi.gaiasbreath.client.modmenu.GaiasBreathModMenuIntegration"
-        ]
-	},
-	"mixins": [
-		"gaias-breath.mixins.json"
-	],
-	"depends": {
-		"fabricloader": ">=0.17.3",
-		"minecraft": "<=1.21.10 >=1.21.9",
-		"java": ">=21",
-		"fabric-api": "*"
-	},
-	"suggests": {
-        "modmenu": ">15.0.0"
-	}
+  "schemaVersion": 1,
+  "id": "gaias-breath",
+  "version": "${version}",
+  "name": "Gaia’s Breath",
+  "description": "A Fabric mod that makes the natural world evolve on its own — grass spreads, flowers bloom, trees regenerate, paths form under footsteps, and burned wood can leave behind charcoal. Minecraft’s ecology becomes alive, gradual, and fully configurable.",
+  "authors": [
+    "Matibi"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/gaias-breath",
+    "sources": "https://github.com/MAT1B1/gaias-breath"
+  },
+  "license": "MIT",
+  "icon": "assets/gaias-breath/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.matibi.gaiasbreath.GaiasBreath"
+    ],
+    "fabric-datagen": [
+      "com.matibi.gaiasbreath.GaiasBreathDataGenerator"
+    ],
+    "client": [
+      "com.matibi.gaiasbreath.GaiasBreathClient"
+    ],
+    "modmenu": [
+      "com.matibi.gaiasbreath.client.modmenu.GaiasBreathModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "gaias-breath.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.17.3",
+    "minecraft": ">=1.21.9 <=1.21.10",
+    "java": ">=21",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "modmenu": ">=15.0.0"
+  }
 }
