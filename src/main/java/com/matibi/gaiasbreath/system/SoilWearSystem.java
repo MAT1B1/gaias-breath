@@ -17,9 +17,10 @@ public class SoilWearSystem {
 
     private static final Map<Long, Boolean> blockedMap = new HashMap<>();
     private static final Map<UUID, BlockPos> lastPlayerPositions = new HashMap<>();
+    private static long tickCounter = 0;
 
     public static void tick(ServerWorld world) {
-        long tickCounter = world.getTime();
+        tickCounter++;
         var cfg = GaiasBreath.CONFIG;
 
         MinecraftServer server = world.getServer();
