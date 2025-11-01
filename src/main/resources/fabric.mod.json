@@ -23,6 +23,9 @@
 		],
         "client": [
           "com.matibi.gaiasbreath.GaiasBreathClient"
+        ],
+        "modmenu": [
+          "com.matibi.gaiasbreath.client.modmenu.GaiasBreathModMenuIntegration"
         ]
 	},
 	"mixins": [
@@ -35,6 +38,6 @@
 		"fabric-api": "*"
 	},
 	"suggests": {
-		"another-mod": "*"
+        "modmenu": ">15.0.0"
 	}
 }

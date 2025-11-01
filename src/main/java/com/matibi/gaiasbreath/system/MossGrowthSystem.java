@@ -1,5 +1,6 @@
 package com.matibi.gaiasbreath.system;
 
+import com.matibi.gaiasbreath.GaiasBreath;
 import com.matibi.gaiasbreath.util.ChunkTracker;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -17,17 +18,10 @@ import java.util.Set;
 
 public class MossGrowthSystem {
 
-    private static final float STONE_TO_MOSSY_CHANCE = 0.02f;
-    private static final float MOSSY_SPREAD_CHANCE = 0.01f;
-    private static final float MOSSY_TO_MOSS_CHANCE = 0.01f;
-
-    private static final int MAX_CHUNK_PER_TICK = 10;
-    private static final int BLOCK_PER_CHUNK = 10;
-    private static final int Y_RANGE = 20;
-
     public static void tick(ServerWorld world) {
         Random random = world.random;
         Set<ChunkPos> loadedChunks = ChunkTracker.getLoadedChunks();
+        var cfg = GaiasBreath.CONFIG;
 
         if (loadedChunks.isEmpty()) return;
 
@@ -36,8 +30,8 @@ public class MossGrowthSystem {
         int processed = 0;
 
         for (ChunkPos chunkPos : chunkList) {
-            if (processed++ >= MAX_CHUNK_PER_TICK) break;
-            for (int i = 0; i < BLOCK_PER_CHUNK; i++) {
+            if (processed++ >= cfg.MOSS_MAX_CHUNK_PER_TICK) break;
+            for (int i = 0; i < cfg.MOSS_BLOCKS_PER_CHUNK; i++) {
                 int x = chunkPos.getStartX() + random.nextInt(16);
                 int z = chunkPos.getStartZ() + random.nextInt(16);
 
@@ -46,7 +40,7 @@ public class MossGrowthSystem {
                         new BlockPos(x, 0, z)
                 );
 
-                for (int dy = 0; dy < Y_RANGE; dy++) {
+                for (int dy = 0; dy < cfg.Y_RANGE; dy++) {
                     BlockPos targetPos = surfacePos.down(dy);
                     Block block = world.getBlockState(targetPos).getBlock();
                     if (block == Blocks.STONE || block == Blocks.COBBLESTONE || block == Blocks.MOSSY_COBBLESTONE)
@@ -60,21 +54,21 @@ public class MossGrowthSystem {
 
     public static void tryGrow(ServerWorld world, BlockPos pos, Random random) {
         Block block = world.getBlockState(pos).getBlock();
-
+        var cfg = GaiasBreath.CONFIG;
         if ((block == Blocks.STONE || block == Blocks.COBBLESTONE) && isTouchingWater(world, pos)) {
-            if (random.nextFloat() < STONE_TO_MOSSY_CHANCE)
+            if (random.nextFloat() < cfg.STONE_TO_MOSSY_CHANCE)
                 world.setBlockState(pos, Blocks.MOSSY_COBBLESTONE.getDefaultState());
             return;
         }
 
         if (block == Blocks.MOSSY_COBBLESTONE && isTouchingWater(world, pos)) {
-            if (random.nextFloat() < MOSSY_TO_MOSS_CHANCE)
+            if (random.nextFloat() < cfg.MOSSY_TO_MOSS_CHANCE)
                 world.setBlockState(pos, Blocks.MOSS_BLOCK.getDefaultState());
             return;
         }
 
         if (block == Blocks.MOSSY_COBBLESTONE)
-            if (random.nextFloat() < MOSSY_SPREAD_CHANCE)
+            if (random.nextFloat() < cfg.MOSSY_SPREAD_CHANCE)
                 spreadToNeighbors(world, pos, random);
     }
 

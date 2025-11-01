@@ -1,5 +1,6 @@
 package com.matibi.gaiasbreath.system;
 
+import com.matibi.gaiasbreath.GaiasBreath;
 import com.matibi.gaiasbreath.util.ChunkTracker;
 import net.minecraft.block.*;
 import net.minecraft.registry.tag.BlockTags;
@@ -14,17 +15,8 @@ import java.util.function.Predicate;
 
 public class VegetationGrowthSystem {
 
-    private static final int MAX_CHUNK_PER_TICK = 20;
-    private static final int BLOCKS_PER_CHUNK = 100;
-
-    private static final float SHORT_GRASS_GROWTH_CHANCE = 0.005f;
-    private static final float SHORT_TO_TALL_CHANCE = 0.005f;
-    private static final float FLOWER_SPREAD_CHANCE = 0.005f;
-    private static final float SAPLING_SPREAD_CHANCE = 0.002f;
-    private static final float MUSHROOM_SPREAD_CHANCE = 0.01f;
-    private static final float BUSH_SPREAD_CHANCE = 0.01f;
-
     public static void tick(ServerWorld world) {
+        var cfg = GaiasBreath.CONFIG;
 
         Random random = world.random;
         Set<ChunkPos> loadedChunks = ChunkTracker.getLoadedChunks();
@@ -35,9 +27,9 @@ public class VegetationGrowthSystem {
 
         int processed = 0;
         for (ChunkPos chunkPos : chunkList) {
-            if (processed++ >= MAX_CHUNK_PER_TICK) break;
+            if (processed++ >= cfg.GROWTH_MAX_CHUNK_PER_TICK) break;
 
-            for (int i = 0; i < BLOCKS_PER_CHUNK; i++) {
+            for (int i = 0; i < cfg.GROWTH_BLOCKS_PER_CHUNK; i++) {
                 int x = chunkPos.getStartX() + random.nextInt(16);
                 int z = chunkPos.getStartZ() + random.nextInt(16);
                 BlockPos pos = world
@@ -49,27 +41,29 @@ public class VegetationGrowthSystem {
     }
 
     private static void growVegetation(ServerWorld world, BlockPos pos, Random random) {
+        var cfg = GaiasBreath.CONFIG;
+
         BlockPos ground = pos.down();
         Block groundBlock = world.getBlockState(ground).getBlock();
 
         if (world.getLightLevel(pos.up()) < 8)
             return;
 
-        if (groundBlock == Blocks.GRASS_BLOCK && random.nextFloat() < SHORT_GRASS_GROWTH_CHANCE) {
+        if (groundBlock == Blocks.GRASS_BLOCK && random.nextFloat() < cfg.SHORT_GRASS_GROWTH_CHANCE) {
             world.setBlockState(pos, Blocks.SHORT_GRASS.getDefaultState());
             return;
         }
 
         if (groundBlock == Blocks.GRASS_BLOCK
                 && world.getBlockState(pos).getBlock() == Blocks.SHORT_GRASS
-                && random.nextFloat() < SHORT_TO_TALL_CHANCE) {
+                && random.nextFloat() < cfg.SHORT_TO_TALL_CHANCE) {
             BlockPos above = pos.up();
             if (world.isAir(above))
                 TallPlantBlock.placeAt(world, Blocks.TALL_GRASS.getDefaultState(), pos, Block.NOTIFY_ALL);
             return;
         }
 
-        if (random.nextFloat() < FLOWER_SPREAD_CHANCE) {
+        if (random.nextFloat() < cfg.FLOWER_SPREAD_CHANCE) {
             Optional<Block> nearbyFlower = findNearbyBlock(world, pos, 4,
                     b -> b instanceof FlowerBlock);
 
@@ -82,7 +76,7 @@ public class VegetationGrowthSystem {
             }
         }
 
-        if (random.nextFloat() < BUSH_SPREAD_CHANCE) {
+        if (random.nextFloat() < cfg.BUSH_SPREAD_CHANCE) {
             Optional<Block> nearbyBush = findNearbyBlock(world, pos, 3,
                     b -> b == Blocks.SWEET_BERRY_BUSH || b == Blocks.BUSH || b == Blocks.FIREFLY_BUSH);
 
@@ -95,7 +89,7 @@ public class VegetationGrowthSystem {
             }
         }
 
-        if (random.nextFloat() < SAPLING_SPREAD_CHANCE) {
+        if (random.nextFloat() < cfg.SAPLING_SPREAD_CHANCE) {
             Optional<Block> nearbyLog = findNearbyBlock(world, pos, 5,
                     b -> b.getDefaultState().isIn(BlockTags.LOGS));
 
@@ -111,7 +105,7 @@ public class VegetationGrowthSystem {
             }
         }
 
-        if (random.nextFloat() < MUSHROOM_SPREAD_CHANCE) {
+        if (random.nextFloat() < cfg.MUSHROOM_SPREAD_CHANCE) {
             if ((world.getLightLevel(pos) <= 7 || isUnderTree(world, pos))
                     && world.getBlockState(ground).isFullCube(world, ground)) {
 

@@ -1,5 +1,6 @@
 package com.matibi.gaiasbreath.mixin;
 
+import com.matibi.gaiasbreath.GaiasBreath;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FireBlock;
@@ -18,8 +19,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(FireBlock.class)
 public class FireBlockMixin {
 
-    @Unique private static final float CHARCOAL_DROP_CHANCE = 0.5f;
-
     @Inject(method = "trySpreadingFire", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/World;removeBlock(Lnet/minecraft/util/math/BlockPos;Z)Z"
@@ -29,10 +28,12 @@ public class FireBlockMixin {
     ) {
         if (world.isClient()) return;
 
+        var cfg = GaiasBreath.CONFIG;
+
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
 
-        if (isWood(block) && random.nextFloat() < CHARCOAL_DROP_CHANCE)
+        if (isWood(block) && random.nextFloat() < cfg.CHARCOAL_DROP_CHANCE)
             Block.dropStack(world, pos, new ItemStack(Items.CHARCOAL));
     }
 

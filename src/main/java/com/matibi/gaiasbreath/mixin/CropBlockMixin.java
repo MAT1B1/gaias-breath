@@ -1,5 +1,6 @@
 package com.matibi.gaiasbreath.mixin;
 
+import com.matibi.gaiasbreath.GaiasBreath;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.server.world.ServerWorld;
@@ -14,9 +15,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(CropBlock.class)
 public class CropBlockMixin {
 
-    @Unique
-    private static final float RAIN_GROWTH_CHANCE = 0.25f;
-
     @Inject(method = "randomTick", at = @At("TAIL"))
     private void gb$onRandomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         if (!world.isRaining() || !world.isSkyVisible(pos.up())) return;
@@ -25,8 +23,9 @@ public class CropBlockMixin {
 
         int currentAge = state.get(CropBlock.AGE);
         int maxAge = crop.getMaxAge();
+        var cfg = GaiasBreath.CONFIG;
 
-        if (currentAge < maxAge && random.nextFloat() < RAIN_GROWTH_CHANCE)
+        if (currentAge < maxAge && random.nextFloat() < cfg.RAIN_GROWTH_CHANCE)
             world.setBlockState(pos, crop.withAge(currentAge + 1), 2);
     }
 }
